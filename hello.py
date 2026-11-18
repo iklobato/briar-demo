@@ -6,4 +6,5 @@ def greet(name):
 
 
 def hush(name):
+    """Return the greeting for name in lowercase, without the trailing punctuation."""
     return greet(name).lower()[:-1]
