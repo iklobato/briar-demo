@@ -3,3 +3,7 @@
 
 def greet(name):
     return f"Hello, {name}!"
+
+
+def whisper(name=None):
+    return greet(name).lower()
