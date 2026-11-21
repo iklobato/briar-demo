@@ -6,4 +6,5 @@ def greet(name):
 
 
 def whisper(text):
+    """Return the text in lowercase followed by an ellipsis."""
     return text.lower() + "..."
