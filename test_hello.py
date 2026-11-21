@@ -9,7 +9,7 @@ class GreetTest(unittest.TestCase):
 
 
 class ShoutTest(unittest.TestCase):
-    def test_shouts_text(self):
+    def test_shout(self):
         self.assertEqual(shout("hi"), "HI!")
 
 
