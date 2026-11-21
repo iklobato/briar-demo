@@ -9,7 +9,7 @@ class GreetTest(unittest.TestCase):
 
 
 class WhisperTest(unittest.TestCase):
-    def test_whispers_in_lower_case(self):
+    def test_whisper(self):
         self.assertEqual(whisper("Hi"), "hi...")
 
 
