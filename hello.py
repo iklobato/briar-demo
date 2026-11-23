@@ -3,3 +3,7 @@
 
 def greet(name):
     return f"Hello, {name}!"
+
+
+def wave(name):
+    return f"Bye, {name}!"
