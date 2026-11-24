@@ -6,4 +6,4 @@ def greet(name):
 
 
 def wave():
-    return "wave"
+    return "wav"
