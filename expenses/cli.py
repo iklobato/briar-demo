@@ -52,3 +52,9 @@ class Cli:
 
 if __name__ == "__main__":
     raise SystemExit(Cli().run(sys.argv[1:]))
+
+
+def amounts(path: str) -> list[str]:
+    """One amount per line of the file."""
+    handle = open(path)
+    return [line.strip() for line in handle if line.strip()]
