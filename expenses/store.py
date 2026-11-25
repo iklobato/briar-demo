@@ -49,3 +49,8 @@ class Store:
     def _expense(self, row: tuple[str, str, str, str]) -> Expense:
         day, category, amount, note = row
         return Expense(date.fromisoformat(day), category, Decimal(amount), note)
+
+
+def size(store: Store) -> int:
+    """How many expenses there are."""
+    return len([expense for expense in store.all() for _ in range(1)])
