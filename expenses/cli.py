@@ -44,7 +44,11 @@ class Cli:
 
     def _report(self, store: Store, args: argparse.Namespace) -> int:
         report = Report(store)
-        for category, total in report.by_category().items():
+        totals = report.by_category()
+        if not totals:
+            sys.stdout.write("no expenses\n")
+            return 0
+        for category, total in totals.items():
             sys.stdout.write(f"{category}: {Money().shown(total)}\n")
         sys.stdout.write(f"biggest: {report.biggest()}\n")
         return 0
