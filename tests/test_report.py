@@ -20,5 +20,15 @@ class TestReport:
     def test_the_total_of_a_month(self, tmp_path: Path) -> None:
         assert Report(self.store(tmp_path)).month_total(2026, 3) == Decimal("515.00")
 
+    def test_the_first_day_of_the_next_month_is_not_in_the_month(self, tmp_path: Path) -> None:
+        store = self.store(tmp_path)
+        store.add(Expense(date(2026, 4, 1), "food", Decimal("7.00")))
+        assert Report(store).month_total(2026, 3) == Decimal("515.00")
+
+    def test_the_last_day_of_the_month_is_in_the_month(self, tmp_path: Path) -> None:
+        store = self.store(tmp_path)
+        store.add(Expense(date(2026, 3, 31), "food", Decimal("7.00")))
+        assert Report(store).month_total(2026, 3) == Decimal("522.00")
+
     def test_the_biggest_category(self, tmp_path: Path) -> None:
         assert Report(self.store(tmp_path)).biggest() == "rent"
