@@ -22,3 +22,8 @@ class Money:
 
     def shown(self, amount: Decimal) -> str:
         return f"{amount.quantize(self.CENTS)}"
+
+
+def whole(amount: Decimal) -> Decimal:
+    """The amount rounded half up to whole units."""
+    return amount.quantize(Decimal("1"))
