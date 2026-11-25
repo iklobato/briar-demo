@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import sqlite3
+from collections.abc import Iterator
+from contextlib import contextmanager
 from dataclasses import dataclass
 from datetime import date
 from decimal import Decimal
@@ -24,27 +26,33 @@ class Store:
         self._path = path
 
     def add(self, expense: Expense) -> None:
-        connection = self._connected()
-        connection.execute(
-            "INSERT INTO expenses (day, category, amount, note) VALUES (?, ?, ?, ?)",
-            (expense.day.isoformat(), expense.category, str(expense.amount), expense.note),
-        )
-        connection.commit()
+        with self._connected() as connection:
+            connection.execute(
+                "INSERT INTO expenses (day, category, amount, note) VALUES (?, ?, ?, ?)",
+                (expense.day.isoformat(), expense.category, str(expense.amount), expense.note),
+            )
+            connection.commit()
 
     def all(self) -> list[Expense]:
-        rows = self._connected().execute("SELECT day, category, amount, note FROM expenses ORDER BY day").fetchall()
+        with self._connected() as connection:
+            rows = connection.execute("SELECT day, category, amount, note FROM expenses ORDER BY day").fetchall()
         return [self._expense(row) for row in rows]
 
     def in_category(self, category: str) -> list[Expense]:
-        rows = self._connected().execute(
-            "SELECT day, category, amount, note FROM expenses WHERE category = ? ORDER BY day", (category,)
-        ).fetchall()
+        with self._connected() as connection:
+            rows = connection.execute(
+                "SELECT day, category, amount, note FROM expenses WHERE category = ? ORDER BY day", (category,)
+            ).fetchall()
         return [self._expense(row) for row in rows]
 
-    def _connected(self) -> sqlite3.Connection:
+    @contextmanager
+    def _connected(self) -> Iterator[sqlite3.Connection]:
         connection = sqlite3.connect(self._path)
-        connection.execute(self.SCHEMA)
-        return connection
+        try:
+            connection.execute(self.SCHEMA)
+            yield connection
+        finally:
+            connection.close()
 
     def _expense(self, row: tuple[str, str, str, str]) -> Expense:
         day, category, amount, note = row
