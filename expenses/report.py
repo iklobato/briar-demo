@@ -18,6 +18,13 @@ class Report:
             totals[expense.category] = totals.get(expense.category, Decimal("0")) + expense.amount
         return dict(sorted(totals.items()))
 
+    def by_month(self) -> dict[str, Decimal]:
+        totals: dict[str, Decimal] = {}
+        for expense in self._store.all():
+            month = f"{expense.day.year:04d}-{expense.day.month:02d}"
+            totals[month] = totals.get(month, Decimal("0")) + expense.amount
+        return dict(sorted(totals.items()))
+
     def month_total(self, year: int, month: int) -> Decimal:
         first = date(year, month, 1)
         after = (first + timedelta(days=32)).replace(day=1)
