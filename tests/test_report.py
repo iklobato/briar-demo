@@ -22,3 +22,6 @@ class TestReport:
 
     def test_the_biggest_category(self, tmp_path: Path) -> None:
         assert Report(self.store(tmp_path)).biggest() == "rent"
+
+    def test_counts_by_category(self, tmp_path: Path) -> None:
+        assert Report(self.store(tmp_path)).counts() == {"food": 2, "rent": 1}
