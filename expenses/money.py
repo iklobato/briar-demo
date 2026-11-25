@@ -18,6 +18,8 @@ class Money:
             amount = Decimal(cleaned)
         except InvalidOperation as broken:
             raise MoneyError(f"not an amount: {text!r}") from broken
+        if amount < 0:
+            raise MoneyError(f"negative amount: {text!r}")
         return amount.quantize(self.CENTS)
 
     def shown(self, amount: Decimal) -> str:

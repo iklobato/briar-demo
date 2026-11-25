@@ -15,3 +15,10 @@ class TestMoney:
     def test_text_that_is_no_amount_is_refused(self) -> None:
         with pytest.raises(MoneyError, match="not an amount: 'abc'"):
             Money().parse("abc")
+
+    def test_a_negative_amount_is_refused(self) -> None:
+        with pytest.raises(MoneyError, match="negative amount: '-5'"):
+            Money().parse("-5")
+
+    def test_zero_is_accepted(self) -> None:
+        assert Money().parse("0") == Decimal("0.00")
