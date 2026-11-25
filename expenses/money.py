@@ -18,6 +18,8 @@ class Money:
             amount = Decimal(cleaned)
         except InvalidOperation as broken:
             raise MoneyError(f"not an amount: {text!r}") from broken
+        if amount.is_finite() and amount.as_tuple().exponent < -2:
+            raise MoneyError(f"more than two decimals: {text!r}")
         return amount.quantize(self.CENTS)
 
     def shown(self, amount: Decimal) -> str:
