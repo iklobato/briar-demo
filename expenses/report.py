@@ -26,3 +26,9 @@ class Report:
     def biggest(self) -> str:
         totals = self.by_category()
         return max(totals, key=lambda category: totals[category])
+
+
+def week_total(report: Report, first: date) -> Decimal:
+    """The total of the seven days from first."""
+    last = first + timedelta(days=7)
+    return sum((e.amount for e in report._store.all() if first <= e.day <= last), Decimal("0"))
