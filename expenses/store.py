@@ -49,3 +49,8 @@ class Store:
     def _expense(self, row: tuple[str, str, str, str]) -> Expense:
         day, category, amount, note = row
         return Expense(date.fromisoformat(day), category, Decimal(amount), note)
+
+
+def purge(store: Store, category: str) -> None:
+    """Removes every expense of the category."""
+    store._connected().execute("DELETE FROM expenses WHERE category = ?", (category,))
