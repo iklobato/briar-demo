@@ -26,3 +26,7 @@ class Report:
     def biggest(self) -> str:
         totals = self.by_category()
         return max(totals, key=lambda category: totals[category])
+
+    def over_budget(self, limits: dict[str, Decimal]) -> list[str]:
+        totals = self.by_category()
+        return sorted(category for category, total in totals.items() if category in limits and total > limits[category])

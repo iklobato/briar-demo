@@ -22,3 +22,16 @@ class TestReport:
 
     def test_the_biggest_category(self, tmp_path: Path) -> None:
         assert Report(self.store(tmp_path)).biggest() == "rent"
+
+    def test_over_budget_returns_categories_above_their_limit(self, tmp_path: Path) -> None:
+        limits = {"rent": Decimal("400.00"), "food": Decimal("10.00")}
+        assert Report(self.store(tmp_path)).over_budget(limits) == ["food", "rent"]
+
+    def test_over_budget_skips_a_category_at_exactly_its_limit(self, tmp_path: Path) -> None:
+        limits = {"food": Decimal("15.00"), "rent": Decimal("499.99")}
+        assert Report(self.store(tmp_path)).over_budget(limits) == ["rent"]
+
+    def test_over_budget_ignores_categories_with_no_limit(self, tmp_path: Path) -> None:
+        report = Report(self.store(tmp_path))
+        assert report.over_budget({"food": Decimal("1.00")}) == ["food"]
+        assert report.over_budget({}) == []
