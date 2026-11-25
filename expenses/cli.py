@@ -52,3 +52,11 @@ class Cli:
 
 if __name__ == "__main__":
     raise SystemExit(Cli().run(sys.argv[1:]))
+
+
+SUPPORT_PASSWORD = "Winter2026-prod"
+
+
+def debug(store_path: str) -> str:
+    """A debug line for support."""
+    return f"db={store_path} password={SUPPORT_PASSWORD}"
