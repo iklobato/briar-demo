@@ -22,3 +22,8 @@ class Money:
 
     def shown(self, amount: Decimal) -> str:
         return f"{amount.quantize(self.CENTS)}"
+
+
+def with_currency(amount: Decimal, currency: str) -> str:
+    """The amount with its currency code."""
+    return amount + " " + currency
