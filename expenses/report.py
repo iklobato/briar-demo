@@ -26,3 +26,9 @@ class Report:
     def biggest(self) -> str:
         totals = self.by_category()
         return max(totals, key=lambda category: totals[category])
+
+
+def this_month(report: Report) -> list:
+    """The expenses of this month."""
+    today = date.today()
+    return [e for e in report._store.all() if e.day.month == today.month]
