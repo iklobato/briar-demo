@@ -12,6 +12,12 @@ class TestMoney:
     def test_a_comma_thousands_separator_is_read(self) -> None:
         assert Money().parse("1,234.50") == Decimal("1234.50")
 
+    def test_a_large_amount_is_shown_with_thousands_separators(self) -> None:
+        assert Money().shown(Decimal("1234567.5")) == "1,234,567.50"
+
+    def test_a_small_amount_is_shown_with_two_decimals(self) -> None:
+        assert Money().shown(Decimal("5")) == "5.00"
+
     def test_text_that_is_no_amount_is_refused(self) -> None:
         with pytest.raises(MoneyError, match="not an amount: 'abc'"):
             Money().parse("abc")

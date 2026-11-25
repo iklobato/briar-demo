@@ -21,4 +21,4 @@ class Money:
         return amount.quantize(self.CENTS)
 
     def shown(self, amount: Decimal) -> str:
-        return f"{amount.quantize(self.CENTS)}"
+        return f"{amount.quantize(self.CENTS):,}"
