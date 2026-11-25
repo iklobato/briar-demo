@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import csv
 import sys
 from datetime import date
 from pathlib import Path
@@ -16,7 +17,7 @@ class Cli:
     def run(self, argv: list[str]) -> int:
         args = self._parser().parse_args(argv)
         store = Store(Path(args.db))
-        commands = {"add": self._add, "list": self._list, "report": self._report}
+        commands = {"add": self._add, "list": self._list, "report": self._report, "export": self._export}
         return commands[args.command](store, args)
 
     def _parser(self) -> argparse.ArgumentParser:
@@ -30,6 +31,7 @@ class Cli:
         add.add_argument("--day", default="")
         sub.add_parser("list")
         sub.add_parser("report")
+        sub.add_parser("export")
         return parser
 
     def _add(self, store: Store, args: argparse.Namespace) -> int:
@@ -47,6 +49,13 @@ class Cli:
         for category, total in report.by_category().items():
             sys.stdout.write(f"{category}: {Money().shown(total)}\n")
         sys.stdout.write(f"biggest: {report.biggest()}\n")
+        return 0
+
+    def _export(self, store: Store, args: argparse.Namespace) -> int:
+        writer = csv.writer(sys.stdout, lineterminator="\n")
+        writer.writerow(["day", "category", "amount", "note"])
+        for expense in store.all():
+            writer.writerow([expense.day.isoformat(), expense.category, Money().shown(expense.amount), expense.note])
         return 0
 
 
