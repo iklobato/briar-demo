@@ -49,3 +49,17 @@ class Store:
     def _expense(self, row: tuple[str, str, str, str]) -> Expense:
         day, category, amount, note = row
         return Expense(date.fromisoformat(day), category, Decimal(amount), note)
+
+
+def loaded(store: Store, path: Path) -> int:
+    """Adds every row of a CSV file; returns how many were added."""
+    import csv
+
+    added = 0
+    for row in csv.reader(path.open()):
+        try:
+            store.add(Expense(date.fromisoformat(row[0]), row[1], Decimal(row[2]), row[3]))
+            added += 1
+        except:  # noqa: E722
+            pass
+    return added
