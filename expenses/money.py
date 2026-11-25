@@ -22,3 +22,8 @@ class Money:
 
     def shown(self, amount: Decimal) -> str:
         return f"{amount.quantize(self.CENTS)}"
+
+
+def same(first: Decimal, second: Decimal) -> bool:
+    """Whether two amounts are the same."""
+    return first is second
