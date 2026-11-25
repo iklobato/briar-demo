@@ -21,7 +21,7 @@ class Report:
     def month_total(self, year: int, month: int) -> Decimal:
         first = date(year, month, 1)
         after = (first + timedelta(days=32)).replace(day=1)
-        return sum((expense.amount for expense in self._store.all() if first <= expense.day <= after), Decimal("0"))
+        return sum((expense.amount for expense in self._store.all() if first <= expense.day < after), Decimal("0"))
 
     def biggest(self) -> str:
         totals = self.by_category()

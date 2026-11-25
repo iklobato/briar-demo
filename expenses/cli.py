@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import argparse
 import sys
-from datetime import date
+from datetime import date, datetime
 from pathlib import Path
 
 from expenses.money import Money
@@ -29,7 +29,8 @@ class Cli:
         add.add_argument("--note", default="")
         add.add_argument("--day", default="")
         sub.add_parser("list")
-        sub.add_parser("report")
+        report = sub.add_parser("report")
+        report.add_argument("--month", default="")
         return parser
 
     def _add(self, store: Store, args: argparse.Namespace) -> int:
@@ -44,6 +45,14 @@ class Cli:
 
     def _report(self, store: Store, args: argparse.Namespace) -> int:
         report = Report(store)
+        if args.month:
+            try:
+                first = datetime.strptime(args.month, "%Y-%m").date()
+            except ValueError:
+                sys.stderr.write(f"not a month (YYYY-MM): {args.month}\n")
+                return 2
+            sys.stdout.write(f"total {args.month}: {Money().shown(report.month_total(first.year, first.month))}\n")
+            return 0
         for category, total in report.by_category().items():
             sys.stdout.write(f"{category}: {Money().shown(total)}\n")
         sys.stdout.write(f"biggest: {report.biggest()}\n")
