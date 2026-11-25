@@ -9,3 +9,5 @@ A tiny repo for the briar and bcc demos: `hello.py` and a small expense tracker 
     python3 -m expenses.cli --db my.db report
 
 Tests: `python3 -m pytest -q`.
+
+The `--db` option names the sqlite file; it defaults to `expenses.db` in the current folder.
