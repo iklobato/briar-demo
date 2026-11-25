@@ -28,7 +28,8 @@ class Cli:
         add.add_argument("amount")
         add.add_argument("--note", default="")
         add.add_argument("--day", default="")
-        sub.add_parser("list")
+        listing = sub.add_parser("list")
+        listing.add_argument("--category", default="")
         sub.add_parser("report")
         return parser
 
@@ -38,7 +39,8 @@ class Cli:
         return 0
 
     def _list(self, store: Store, args: argparse.Namespace) -> int:
-        for expense in store.all():
+        expenses = store.in_category(args.category) if args.category else store.all()
+        for expense in expenses:
             sys.stdout.write(f"{expense.day} {expense.category} {Money().shown(expense.amount)} {expense.note}\n")
         return 0
 
