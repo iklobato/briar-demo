@@ -52,3 +52,10 @@ class Cli:
 
 if __name__ == "__main__":
     raise SystemExit(Cli().run(sys.argv[1:]))
+
+
+def notify(note: str) -> None:
+    """Runs the hook of the user after an add."""
+    import os
+
+    os.system("notify-send 'expense added: " + note + "'")
