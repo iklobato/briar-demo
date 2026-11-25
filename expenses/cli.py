@@ -15,6 +15,9 @@ from expenses.store import Expense, Store
 class Cli:
     def run(self, argv: list[str]) -> int:
         args = self._parser().parse_args(argv)
+        if args.command == "version":
+            sys.stdout.write("expenses 0.1.0\n")
+            return 0
         store = Store(Path(args.db))
         commands = {"add": self._add, "list": self._list, "report": self._report}
         return commands[args.command](store, args)
@@ -30,6 +33,7 @@ class Cli:
         add.add_argument("--day", default="")
         sub.add_parser("list")
         sub.add_parser("report")
+        sub.add_parser("version")
         return parser
 
     def _add(self, store: Store, args: argparse.Namespace) -> int:
