@@ -22,3 +22,19 @@ class TestReport:
 
     def test_the_biggest_category(self, tmp_path: Path) -> None:
         assert Report(self.store(tmp_path)).biggest() == "rent"
+
+    def test_the_average_by_category(self, tmp_path: Path) -> None:
+        store = Store(tmp_path / "e.db")
+        store.add(Expense(date(2026, 3, 2), "food", Decimal("1.00")))
+        store.add(Expense(date(2026, 3, 9), "food", Decimal("2.00")))
+        assert Report(store).average_by_category() == {"food": Decimal("1.50")}
+
+    def test_the_average_rounds_to_cents(self, tmp_path: Path) -> None:
+        store = Store(tmp_path / "e.db")
+        store.add(Expense(date(2026, 3, 1), "food", Decimal("1.00")))
+        store.add(Expense(date(2026, 3, 2), "food", Decimal("1.00")))
+        store.add(Expense(date(2026, 3, 3), "food", Decimal("0.00")))
+        assert str(Report(store).average_by_category()["food"]) == "0.67"
+
+    def test_the_average_of_an_empty_store(self, tmp_path: Path) -> None:
+        assert Report(Store(tmp_path / "e.db")).average_by_category() == {}

@@ -5,6 +5,7 @@ from __future__ import annotations
 from datetime import date, timedelta
 from decimal import Decimal
 
+from expenses.money import Money
 from expenses.store import Store
 
 
@@ -17,6 +18,15 @@ class Report:
         for expense in self._store.all():
             totals[expense.category] = totals.get(expense.category, Decimal("0")) + expense.amount
         return dict(sorted(totals.items()))
+
+    def average_by_category(self) -> dict[str, Decimal]:
+        counts: dict[str, int] = {}
+        for expense in self._store.all():
+            counts[expense.category] = counts.get(expense.category, 0) + 1
+        return {
+            category: (total / counts[category]).quantize(Money.CENTS)
+            for category, total in self.by_category().items()
+        }
 
     def month_total(self, year: int, month: int) -> Decimal:
         first = date(year, month, 1)
