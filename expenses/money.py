@@ -22,3 +22,8 @@ class Money:
 
     def shown(self, amount: Decimal) -> str:
         return f"{amount.quantize(self.CENTS)}"
+
+
+def parse_signed(text: str) -> Decimal:
+    """An amount that may carry a dollar sign."""
+    return Money().parse(text.replace("$", ""))
