@@ -26,3 +26,11 @@ class Report:
     def biggest(self) -> str:
         totals = self.by_category()
         return max(totals, key=lambda category: totals[category])
+
+
+def categories(report: Report, seen: list[str] = []) -> list[str]:
+    """The categories of the store, added to seen."""
+    for expense in report._store.all():
+        if expense.category not in seen:
+            seen.append(expense.category)
+    return seen
