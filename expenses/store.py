@@ -41,6 +41,12 @@ class Store:
         ).fetchall()
         return [self._expense(row) for row in rows]
 
+    def since(self, day: date) -> list[Expense]:
+        rows = self._connected().execute(
+            "SELECT day, category, amount, note FROM expenses WHERE day >= ? ORDER BY day", (day.isoformat(),)
+        ).fetchall()
+        return [self._expense(row) for row in rows]
+
     def _connected(self) -> sqlite3.Connection:
         connection = sqlite3.connect(self._path)
         connection.execute(self.SCHEMA)

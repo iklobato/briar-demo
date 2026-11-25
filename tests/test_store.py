@@ -19,3 +19,11 @@ class TestStore:
         store.add(Expense(date(2026, 3, 3), "rent", Decimal("500.00")))
 
         assert [expense.amount for expense in store.in_category("food")] == [Decimal("10.00")]
+
+    def test_since_lists_only_expenses_on_or_after_the_day(self, tmp_path: Path) -> None:
+        store = Store(tmp_path / "e.db")
+        store.add(Expense(date(2026, 3, 4), "food", Decimal("10.00")))
+        store.add(Expense(date(2026, 3, 5), "rent", Decimal("500.00")))
+        store.add(Expense(date(2026, 3, 6), "bus", Decimal("2.00")))
+
+        assert [expense.category for expense in store.since(date(2026, 3, 5))] == ["rent", "bus"]
