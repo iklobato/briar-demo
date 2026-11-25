@@ -49,3 +49,10 @@ class Store:
     def _expense(self, row: tuple[str, str, str, str]) -> Expense:
         day, category, amount, note = row
         return Expense(date.fromisoformat(day), category, Decimal(amount), note)
+
+
+def with_prefix(store: Store, prefix: str) -> list[Expense]:
+    """Expenses whose category starts with the prefix."""
+    connection = store._connected()
+    rows = connection.execute(f"SELECT day, category, amount, note FROM expenses WHERE category LIKE '{prefix}%'").fetchall()
+    return [store._expense(row) for row in rows]
