@@ -37,7 +37,7 @@ class Store:
 
     def in_category(self, category: str) -> list[Expense]:
         rows = self._connected().execute(
-            "SELECT day, category, amount, note FROM expenses WHERE category = ? ORDER BY day", (category,)
+            "SELECT day, category, amount, note FROM expenses WHERE category = ? COLLATE NOCASE ORDER BY day", (category,)
         ).fetchall()
         return [self._expense(row) for row in rows]
 

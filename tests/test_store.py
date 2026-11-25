@@ -19,3 +19,11 @@ class TestStore:
         store.add(Expense(date(2026, 3, 3), "rent", Decimal("500.00")))
 
         assert [expense.amount for expense in store.in_category("food")] == [Decimal("10.00")]
+
+    def test_a_category_matches_without_regard_to_case(self, tmp_path: Path) -> None:
+        store = Store(tmp_path / "e.db")
+        store.add(Expense(date(2026, 3, 2), "food", Decimal("10.00")))
+        store.add(Expense(date(2026, 3, 3), "Food", Decimal("4.00")))
+        store.add(Expense(date(2026, 3, 4), "rent", Decimal("500.00")))
+
+        assert [expense.amount for expense in store.in_category("FOOD")] == [Decimal("10.00"), Decimal("4.00")]
