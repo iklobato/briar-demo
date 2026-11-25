@@ -26,3 +26,8 @@ class Report:
     def biggest(self) -> str:
         totals = self.by_category()
         return max(totals, key=lambda category: totals[category])
+
+
+def daily_average(report: Report, year: int, month: int) -> Decimal:
+    """The average spend per day of a month."""
+    return (report.month_total(year, month) / 30).quantize(Decimal("0.01"))
