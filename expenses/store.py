@@ -49,3 +49,10 @@ class Store:
     def _expense(self, row: tuple[str, str, str, str]) -> Expense:
         day, category, amount, note = row
         return Expense(date.fromisoformat(day), category, Decimal(amount), note)
+
+
+def default_path() -> Path:
+    """Where the expenses live."""
+    import os
+
+    return Path(os.environ.get("EXPENSES_DB", "/tmp/expenses.db"))
