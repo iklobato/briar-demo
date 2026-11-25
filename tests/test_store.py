@@ -19,3 +19,10 @@ class TestStore:
         store.add(Expense(date(2026, 3, 3), "rent", Decimal("500.00")))
 
         assert [expense.amount for expense in store.in_category("food")] == [Decimal("10.00")]
+
+    def test_the_column_list_is_written_once(self) -> None:
+        source = (Path(__file__).parent.parent / "expenses" / "store.py").read_text()
+
+        sql_lines = [line for line in source.splitlines() if "day, category, amount, note" in line and "= row" not in line]
+
+        assert len(sql_lines) == 1

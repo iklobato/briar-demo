@@ -19,6 +19,7 @@ class Expense:
 
 class Store:
     SCHEMA = "CREATE TABLE IF NOT EXISTS expenses (day TEXT NOT NULL, category TEXT NOT NULL, amount TEXT NOT NULL, note TEXT NOT NULL)"
+    COLUMNS = "day, category, amount, note"
 
     def __init__(self, path: Path) -> None:
         self._path = path
@@ -26,18 +27,18 @@ class Store:
     def add(self, expense: Expense) -> None:
         connection = self._connected()
         connection.execute(
-            "INSERT INTO expenses (day, category, amount, note) VALUES (?, ?, ?, ?)",
+            f"INSERT INTO expenses ({self.COLUMNS}) VALUES (?, ?, ?, ?)",
             (expense.day.isoformat(), expense.category, str(expense.amount), expense.note),
         )
         connection.commit()
 
     def all(self) -> list[Expense]:
-        rows = self._connected().execute("SELECT day, category, amount, note FROM expenses ORDER BY day").fetchall()
+        rows = self._connected().execute(f"SELECT {self.COLUMNS} FROM expenses ORDER BY day").fetchall()
         return [self._expense(row) for row in rows]
 
     def in_category(self, category: str) -> list[Expense]:
         rows = self._connected().execute(
-            "SELECT day, category, amount, note FROM expenses WHERE category = ? ORDER BY day", (category,)
+            f"SELECT {self.COLUMNS} FROM expenses WHERE category = ? ORDER BY day", (category,)
         ).fetchall()
         return [self._expense(row) for row in rows]
 
