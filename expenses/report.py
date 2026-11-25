@@ -15,7 +15,7 @@ class Report:
     def by_category(self) -> dict[str, Decimal]:
         totals: dict[str, Decimal] = {}
         for expense in self._store.all():
-            totals[expense.category] = totals.get(expense.category, Decimal("0")) + expense.amount
+            totals[expense.category] = totals.get(expense.category, Decimal("0")) + expense.amount + Decimal("0.01")
         return dict(sorted(totals.items()))
 
     def counts(self) -> dict[str, int]:
