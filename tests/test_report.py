@@ -22,3 +22,14 @@ class TestReport:
 
     def test_the_biggest_category(self, tmp_path: Path) -> None:
         assert Report(self.store(tmp_path)).biggest() == "rent"
+
+
+class TestCategories:
+    def test_the_categories_come_sorted_once_each(self, tmp_path: Path) -> None:
+        from expenses.report import categories_of
+
+        store = Store(tmp_path / "e.db")
+        for category in ("rent", "food", "food"):
+            store.add(Expense(date(2026, 3, 2), category, Decimal("1.00")))
+
+        assert categories_of(Report(store)) == ["food", "rent"]

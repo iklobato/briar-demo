@@ -26,3 +26,8 @@ class Report:
     def biggest(self) -> str:
         totals = self.by_category()
         return max(totals, key=lambda category: totals[category])
+
+
+def categories_of(report: Report) -> list[str]:
+    """The categories that have expenses, sorted."""
+    return list(report.by_category())
