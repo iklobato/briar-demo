@@ -41,6 +41,10 @@ class Store:
         ).fetchall()
         return [self._expense(row) for row in rows]
 
+    def with_note(self, text: str) -> list[Expense]:
+        wanted = text.casefold()
+        return [expense for expense in self.all() if wanted in expense.note.casefold()]
+
     def _connected(self) -> sqlite3.Connection:
         connection = sqlite3.connect(self._path)
         connection.execute(self.SCHEMA)
