@@ -16,7 +16,7 @@ class Cli:
     def run(self, argv: list[str]) -> int:
         args = self._parser().parse_args(argv)
         store = Store(Path(args.db))
-        commands = {"add": self._add, "list": self._list, "report": self._report}
+        commands = {"add": self._add, "delete": self._delete, "list": self._list, "report": self._report}
         return commands[args.command](store, args)
 
     def _parser(self) -> argparse.ArgumentParser:
@@ -28,6 +28,10 @@ class Cli:
         add.add_argument("amount")
         add.add_argument("--note", default="")
         add.add_argument("--day", default="")
+        delete = sub.add_parser("delete")
+        delete.add_argument("day")
+        delete.add_argument("category")
+        delete.add_argument("amount")
         sub.add_parser("list")
         sub.add_parser("report")
         return parser
@@ -36,6 +40,10 @@ class Cli:
         day = date.fromisoformat(args.day) if args.day else date.today()
         store.add(Expense(day, args.category, Money().parse(args.amount), args.note))
         return 0
+
+    def _delete(self, store: Store, args: argparse.Namespace) -> int:
+        deleted = store.delete(date.fromisoformat(args.day), args.category, Money().parse(args.amount))
+        return 0 if deleted else 1
 
     def _list(self, store: Store, args: argparse.Namespace) -> int:
         for expense in store.all():

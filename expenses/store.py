@@ -41,6 +41,15 @@ class Store:
         ).fetchall()
         return [self._expense(row) for row in rows]
 
+    def delete(self, day: date, category: str, amount: Decimal) -> bool:
+        connection = self._connected()
+        cursor = connection.execute(
+            "DELETE FROM expenses WHERE rowid = (SELECT rowid FROM expenses WHERE day = ? AND category = ? AND amount = ? LIMIT 1)",
+            (day.isoformat(), category, str(amount)),
+        )
+        connection.commit()
+        return cursor.rowcount == 1
+
     def _connected(self) -> sqlite3.Connection:
         connection = sqlite3.connect(self._path)
         connection.execute(self.SCHEMA)
