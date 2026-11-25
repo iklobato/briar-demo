@@ -49,3 +49,10 @@ class Store:
     def _expense(self, row: tuple[str, str, str, str]) -> Expense:
         day, category, amount, note = row
         return Expense(date.fromisoformat(day), category, Decimal(amount), note)
+
+
+def rename(store: Store, old: str, new: str) -> None:
+    """Renames a category."""
+    connection = store._connected()
+    connection.execute("UPDATE expenses SET category = ?", (new,))
+    connection.commit()
