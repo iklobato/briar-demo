@@ -19,3 +19,19 @@ class TestStore:
         store.add(Expense(date(2026, 3, 3), "rent", Decimal("500.00")))
 
         assert [expense.amount for expense in store.in_category("food")] == [Decimal("10.00")]
+
+    def test_renote_changes_exactly_one_matching_expense(self, tmp_path: Path) -> None:
+        store = Store(tmp_path / "e.db")
+        store.add(Expense(date(2026, 3, 2), "food", Decimal("10.00"), "old"))
+        store.add(Expense(date(2026, 3, 2), "food", Decimal("10.00"), "old"))
+        store.add(Expense(date(2026, 3, 3), "rent", Decimal("500.00"), "march"))
+
+        assert store.renote(date(2026, 3, 2), "food", Decimal("10.00"), "lunch") is True
+        assert sorted(expense.note for expense in store.all()) == ["lunch", "march", "old"]
+
+    def test_renote_without_a_match_returns_false(self, tmp_path: Path) -> None:
+        store = Store(tmp_path / "e.db")
+        store.add(Expense(date(2026, 3, 2), "food", Decimal("10.00"), "old"))
+
+        assert store.renote(date(2026, 3, 2), "food", Decimal("11.00"), "lunch") is False
+        assert [expense.note for expense in store.all()] == ["old"]

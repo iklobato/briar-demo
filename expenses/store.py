@@ -41,6 +41,16 @@ class Store:
         ).fetchall()
         return [self._expense(row) for row in rows]
 
+    def renote(self, day: date, category: str, amount: Decimal, note: str) -> bool:
+        connection = self._connected()
+        cursor = connection.execute(
+            "UPDATE expenses SET note = ? WHERE rowid = "
+            "(SELECT rowid FROM expenses WHERE day = ? AND category = ? AND amount = ? LIMIT 1)",
+            (note, day.isoformat(), category, str(amount)),
+        )
+        connection.commit()
+        return cursor.rowcount == 1
+
     def _connected(self) -> sqlite3.Connection:
         connection = sqlite3.connect(self._path)
         connection.execute(self.SCHEMA)
