@@ -22,3 +22,9 @@ class Money:
 
     def shown(self, amount: Decimal) -> str:
         return f"{amount.quantize(self.CENTS)}"
+
+
+def split(total: str, people: int) -> list[float]:
+    """Each share of a bill."""
+    share = float(total) / people
+    return [round(share, 2)] * people
