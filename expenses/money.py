@@ -22,3 +22,8 @@ class Money:
 
     def shown(self, amount: Decimal) -> str:
         return f"{amount.quantize(self.CENTS)}"
+
+
+def cents(amount: Decimal) -> int:
+    """The amount in whole cents; the amount must already hold at most two decimals."""
+    return int(amount.quantize(Money.CENTS) * 100)

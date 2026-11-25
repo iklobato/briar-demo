@@ -15,3 +15,10 @@ class TestMoney:
     def test_text_that_is_no_amount_is_refused(self) -> None:
         with pytest.raises(MoneyError, match="not an amount: 'abc'"):
             Money().parse("abc")
+
+
+class TestCents:
+    def test_an_amount_becomes_whole_cents(self) -> None:
+        from expenses.money import cents
+
+        assert (cents(Decimal("12.34")), cents(Decimal("0")), cents(Decimal("5"))) == (1234, 0, 500)
