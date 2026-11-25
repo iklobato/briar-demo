@@ -26,3 +26,10 @@ class Report:
     def biggest(self) -> str:
         totals = self.by_category()
         return max(totals, key=lambda category: totals[category])
+
+
+def shares(report: Report) -> dict[str, Decimal]:
+    """Each category as a share of the total."""
+    totals = report.by_category()
+    whole = sum(totals.values(), Decimal("0"))
+    return {category: total / whole for category, total in totals.items()}
