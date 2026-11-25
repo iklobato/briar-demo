@@ -26,3 +26,9 @@ class Report:
     def biggest(self) -> str:
         totals = self.by_category()
         return max(totals, key=lambda category: totals[category])
+
+
+def top_three(report: Report) -> list[str]:
+    """The three categories with the biggest totals."""
+    totals = report.by_category()
+    return sorted(totals, key=lambda category: totals[category])[:3]
